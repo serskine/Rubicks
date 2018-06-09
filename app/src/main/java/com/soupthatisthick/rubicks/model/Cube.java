@@ -38,7 +38,7 @@ public class Cube {
 
     Color[] top = oneColor(Color.ORANGE);
     Color[] front_left = oneColor(Color.GREEN);
-    Color[] front_right = oneColor(Color.RED);
+    Color[] front_right = oneColor(Color.YELLOW);
     Color[] bottom = oneColor(Color.RED);
     Color[] back_left = oneColor(Color.WHITE);
     Color[] back_right = oneColor(Color.BLUE);
@@ -475,6 +475,7 @@ public class Cube {
         
         return sb.toString();
     }
+
 }
 
 
