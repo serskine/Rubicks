@@ -4,6 +4,12 @@ import com.soupthatisthick.rubicks.rules.Action;
 
 import java.util.logging.Logger;
 
+import static com.soupthatisthick.rubicks.model.Color.BLUE;
+import static com.soupthatisthick.rubicks.model.Color.GREEN;
+import static com.soupthatisthick.rubicks.model.Color.ORANGE;
+import static com.soupthatisthick.rubicks.model.Color.RED;
+import static com.soupthatisthick.rubicks.model.Color.WHITE;
+import static com.soupthatisthick.rubicks.model.Color.YELLOW;
 import static com.soupthatisthick.rubicks.model.Cube.Text.colorText;
 import static com.soupthatisthick.rubicks.model.Cube.Text.columnBreak;
 import static com.soupthatisthick.rubicks.model.Cube.Text.emptyText;
@@ -43,89 +49,108 @@ public class Cube {
         };
     }
 
-    Color[] top = oneColor(Color.ORANGE);
-    Color[] front_left = oneColor(Color.GREEN);
-    Color[] front_right = oneColor(Color.YELLOW);
-    Color[] bottom = oneColor(Color.RED);
-    Color[] back_left = oneColor(Color.WHITE);
-    Color[] back_right = oneColor(Color.BLUE);
+    Color[] orangeFace = oneColor(ORANGE);
+    Color[] greenFace = oneColor(Color.GREEN);
+    Color[] yellowFace = oneColor(YELLOW);
+    Color[] redFace = oneColor(RED);
+    Color[] whiteFace = oneColor(WHITE);
+    Color[] blueFace = oneColor(BLUE);
 
     public Cube() {
-        top = oneColor(Color.ORANGE);
-        front_left = oneColor(Color.GREEN);
-        front_right = oneColor(Color.YELLOW);
-        bottom = oneColor(Color.RED);
-        back_left = oneColor(Color.WHITE);
-        back_right = oneColor(Color.BLUE);
+        orangeFace = oneColor(ORANGE);
+        greenFace = oneColor(Color.GREEN);
+        yellowFace = oneColor(YELLOW);
+        redFace = oneColor(RED);
+        whiteFace = oneColor(WHITE);
+        blueFace = oneColor(BLUE);
     }
 
     public Cube(
-        Color[] top,
-        Color[] front_left,
-        Color[] front_right,
-        Color[] bottom,
-        Color[] back_left,
-        Color[] back_right
+        Color[] orangeFace,
+        Color[] greenFace,
+        Color[] yellowFace,
+        Color[] redFace,
+        Color[] whiteFace,
+        Color[] blueFace
     ) {
-        if (top.length != 9)            throw new RuntimeException("Top must have 9 tiles but has " + top.length +" instead.");
-        if (front_left.length != 9)     throw new RuntimeException("Front left must have 9 tiles but has " + front_left.length +" instead.");
-        if (front_right.length != 9)    throw new RuntimeException("Front Right must have 9 tiles but has " + front_right.length +" instead.");
-        if (bottom.length != 9)         throw new RuntimeException("Bottom must have 9 tiles but has " + bottom.length +" instead.");
-        if (back_left.length != 9)      throw new RuntimeException("Back left must have 9 tiles but has " + back_left.length +" instead.");
-        if (back_right.length != 9)     throw new RuntimeException("Back right must have 9 tiles but has " + back_right.length +" instead.");
+        if (orangeFace.length != 9)
+            throw new RuntimeException("Top must have 9 tiles but has " + orangeFace.length +" instead.");
+        if (greenFace.length != 9)
+            throw new RuntimeException("Front left must have 9 tiles but has " + greenFace.length +" instead.");
+        if (yellowFace.length != 9)
+            throw new RuntimeException("Front Right must have 9 tiles but has " + yellowFace.length +" instead.");
+        if (redFace.length != 9)
+            throw new RuntimeException("Bottom must have 9 tiles but has " + redFace.length +" instead.");
+        if (whiteFace.length != 9)
+            throw new RuntimeException("Back left must have 9 tiles but has " + whiteFace.length +" instead.");
+        if (blueFace.length != 9)
+            throw new RuntimeException("Back right must have 9 tiles but has " + blueFace.length +" instead.");
 
-        this.top = top;
-        this.front_left = front_left;
-        this.front_right = front_right;
-        this.bottom = bottom;
-        this.back_left = back_left;
-        this.back_right = back_right;
+        if (orangeFace[4] != ORANGE)
+            throw new RuntimeException("The " + ORANGE + " face center tile is not " + ORANGE + ".");
+        if (greenFace[4] != GREEN)
+            throw new RuntimeException("The " + GREEN + " face center tile is not " + GREEN + ".");
+        if (yellowFace[4] != YELLOW)
+            throw new RuntimeException("The " + YELLOW + " face center tile is not " + YELLOW + ".");
+        if (redFace[4] != RED)
+            throw new RuntimeException("The " + RED + " face center tile is not " + RED + ".");
+        if (whiteFace[4] != WHITE)
+            throw new RuntimeException("The " + WHITE + " face center tile is not " + WHITE + ".");
+        if (blueFace[4] != BLUE)
+            throw new RuntimeException("The " + BLUE + " face center tile is not " + BLUE + ".");
+
+        this.orangeFace = orangeFace;
+        this.greenFace = greenFace;
+        this.yellowFace = yellowFace;
+        this.redFace = redFace;
+        this.whiteFace = whiteFace;
+        this.blueFace = blueFace;
     }
 
 
     final Cube copy() {
         Cube newCube = new Cube();
-        newCube.back_left = copy(back_left);
-        newCube.back_right = copy(back_right);
-        newCube.top = copy(top);
-        newCube.bottom = copy(bottom);
-        newCube.front_left = copy(front_left);
-        newCube.front_right = copy(front_right);
+        newCube.whiteFace = copy(whiteFace);
+        newCube.blueFace = copy(blueFace);
+        newCube.orangeFace = copy(orangeFace);
+        newCube.redFace = copy(redFace);
+        newCube.greenFace = copy(greenFace);
+        newCube.yellowFace = copy(yellowFace);
         return newCube;
     }
 
     private Cube rotateTopClockwise() {
         Cube newCube = copy();
 
-        // Change the top face colors
-        newCube.top[0] = top[6];
-        newCube.top[1] = top[3];
-        newCube.top[2] = top[0];
-        newCube.top[3] = top[7];
-        newCube.top[5] = top[1];
-        newCube.top[6] = top[8];
-        newCube.top[7] = top[5];
-        newCube.top[8] = top[3];
+        // Change the orangeFace face colors
+        newCube.orangeFace[0] = orangeFace[6];
+        newCube.orangeFace[1] = orangeFace[3];
+        newCube.orangeFace[2] = orangeFace[0];
+        newCube.orangeFace[3] = orangeFace[7];
+        newCube.orangeFace[5] = orangeFace[1];
+        newCube.orangeFace[6] = orangeFace[8];
+        newCube.orangeFace[7] = orangeFace[5];
+        newCube.orangeFace[8] = orangeFace[3];
 
         // Front left
-        newCube.front_left[2] = front_right[0];
-        newCube.front_left[5] = front_right[1];
-        newCube.front_left[8] = front_right[2];
+        newCube.greenFace[2] = yellowFace[0];
+        newCube.greenFace[5] = yellowFace[1];
+        newCube.greenFace[8] = yellowFace[2];
 
         // Front right
-        newCube.front_right[0] = back_right[6];
-        newCube.front_right[1] = back_right[3];
-        newCube.front_right[2] = back_right[0];
+        newCube.yellowFace[0] = blueFace[6];
+        newCube.yellowFace[1] = blueFace[3];
+        newCube.yellowFace[2] = blueFace[0];
 
         // Back left
-        newCube.back_left[6] = front_left[8];
-        newCube.back_left[7] = front_left[5];
-        newCube.back_left[8] = front_left[2];
+        newCube.whiteFace[6] = greenFace[8];
+        newCube.whiteFace[7] = greenFace[5];
+        newCube.whiteFace[8] = greenFace[2];
 
         // Back right
-        newCube.back_right[0] = back_left[6];
-        newCube.back_right[3] = back_left[7];
-        newCube.back_right[6] = back_left[8];
+        newCube.blueFace[0] = whiteFace[6];
+        newCube.blueFace[3] = whiteFace[7];
+        newCube.blueFace[6] = whiteFace[8];
 
         return newCube;
     }
@@ -134,35 +159,35 @@ public class Cube {
         Cube newCube = copy();
 
         // Change the face colors
-        newCube.front_left[0] = front_left[6];
-        newCube.front_left[1] = front_left[3];
-        newCube.front_left[2] = front_left[0];
-        newCube.front_left[3] = front_left[7];
-        newCube.front_left[5] = front_left[1];
-        newCube.front_left[6] = front_left[8];
-        newCube.front_left[7] = front_left[5];
-        newCube.front_left[8] = front_left[3];
+        newCube.greenFace[0] = greenFace[6];
+        newCube.greenFace[1] = greenFace[3];
+        newCube.greenFace[2] = greenFace[0];
+        newCube.greenFace[3] = greenFace[7];
+        newCube.greenFace[5] = greenFace[1];
+        newCube.greenFace[6] = greenFace[8];
+        newCube.greenFace[7] = greenFace[5];
+        newCube.greenFace[8] = greenFace[3];
 
 
         // Front right
-        newCube.front_right[0] = top[0];
-        newCube.front_right[3] = top[3];
-        newCube.front_right[6] = top[6];
+        newCube.yellowFace[0] = orangeFace[0];
+        newCube.yellowFace[3] = orangeFace[3];
+        newCube.yellowFace[6] = orangeFace[6];
 
         // Top
-        newCube.top[0] = back_left[0];
-        newCube.top[3] = back_left[3];
-        newCube.top[6] = back_left[6];
+        newCube.orangeFace[0] = whiteFace[0];
+        newCube.orangeFace[3] = whiteFace[3];
+        newCube.orangeFace[6] = whiteFace[6];
 
         // Back left
-        newCube.back_left[0] = bottom[0];
-        newCube.back_left[3] = bottom[3];
-        newCube.back_left[6] = bottom[6];
+        newCube.whiteFace[0] = redFace[0];
+        newCube.whiteFace[3] = redFace[3];
+        newCube.whiteFace[6] = redFace[6];
 
         // Bottom
-        newCube.bottom[0] = front_right[0];
-        newCube.bottom[3] = front_right[3];
-        newCube.bottom[6] = front_right[6];
+        newCube.redFace[0] = yellowFace[0];
+        newCube.redFace[3] = yellowFace[3];
+        newCube.redFace[6] = yellowFace[6];
 
         return newCube;
     }
@@ -172,34 +197,34 @@ public class Cube {
         Cube newCube = copy();
 
         // Change the face colors
-        newCube.back_right[0] = back_right[6];
-        newCube.back_right[1] = back_right[3];
-        newCube.back_right[2] = back_right[0];
-        newCube.back_right[3] = back_right[7];
-        newCube.back_right[5] = back_right[1];
-        newCube.back_right[6] = back_right[8];
-        newCube.back_right[7] = back_right[5];
-        newCube.back_right[8] = back_right[3];
+        newCube.blueFace[0] = blueFace[6];
+        newCube.blueFace[1] = blueFace[3];
+        newCube.blueFace[2] = blueFace[0];
+        newCube.blueFace[3] = blueFace[7];
+        newCube.blueFace[5] = blueFace[1];
+        newCube.blueFace[6] = blueFace[8];
+        newCube.blueFace[7] = blueFace[5];
+        newCube.blueFace[8] = blueFace[3];
 
         // Top
-        newCube.top[2] = front_right[2];
-        newCube.top[5] = front_right[5];
-        newCube.top[8] = front_right[8];
+        newCube.orangeFace[2] = yellowFace[2];
+        newCube.orangeFace[5] = yellowFace[5];
+        newCube.orangeFace[8] = yellowFace[8];
 
         // Front Right
-        newCube.front_right[2] = bottom[2];
-        newCube.front_right[5] = bottom[5];
-        newCube.front_right[8] = bottom[8];
+        newCube.yellowFace[2] = redFace[2];
+        newCube.yellowFace[5] = redFace[5];
+        newCube.yellowFace[8] = redFace[8];
 
         // Bottom
-        newCube.bottom[2] = back_left[2];
-        newCube.bottom[5] = back_left[5];
-        newCube.bottom[8] = back_left[8];
+        newCube.redFace[2] = whiteFace[2];
+        newCube.redFace[5] = whiteFace[5];
+        newCube.redFace[8] = whiteFace[8];
 
         // Back Left
-        newCube.back_left[2] = top[2];
-        newCube.back_left[5] = top[5];
-        newCube.back_left[8] = top[8];
+        newCube.whiteFace[2] = orangeFace[2];
+        newCube.whiteFace[5] = orangeFace[5];
+        newCube.whiteFace[8] = orangeFace[8];
 
         return newCube;
 
@@ -210,34 +235,34 @@ public class Cube {
         Cube newCube = copy();
 
         // Change the face colors
-        newCube.front_right[0] = front_right[6];
-        newCube.front_right[1] = front_right[3];
-        newCube.front_right[2] = front_right[0];
-        newCube.front_right[3] = front_right[7];
-        newCube.front_right[5] = front_right[1];
-        newCube.front_right[6] = front_right[8];
-        newCube.front_right[7] = front_right[5];
-        newCube.front_right[8] = front_right[3];
+        newCube.yellowFace[0] = yellowFace[6];
+        newCube.yellowFace[1] = yellowFace[3];
+        newCube.yellowFace[2] = yellowFace[0];
+        newCube.yellowFace[3] = yellowFace[7];
+        newCube.yellowFace[5] = yellowFace[1];
+        newCube.yellowFace[6] = yellowFace[8];
+        newCube.yellowFace[7] = yellowFace[5];
+        newCube.yellowFace[8] = yellowFace[3];
 
         // Top
-        newCube.top[6] = front_left[6];
-        newCube.top[7] = front_left[7];
-        newCube.top[8] = front_left[8];
+        newCube.orangeFace[6] = greenFace[6];
+        newCube.orangeFace[7] = greenFace[7];
+        newCube.orangeFace[8] = greenFace[8];
 
         // Back Right
-        newCube.back_right[6] = top[6];
-        newCube.back_right[7] = top[7];
-        newCube.back_right[8] = top[8];
+        newCube.blueFace[6] = orangeFace[6];
+        newCube.blueFace[7] = orangeFace[7];
+        newCube.blueFace[8] = orangeFace[8];
 
         // Bottom
-        newCube.bottom[2] = back_right[6];
-        newCube.bottom[1] = back_right[7];
-        newCube.bottom[0] = back_right[8];
+        newCube.redFace[2] = blueFace[6];
+        newCube.redFace[1] = blueFace[7];
+        newCube.redFace[0] = blueFace[8];
 
         // Front Left
-        newCube.front_left[8] = bottom[0];
-        newCube.front_left[7] = bottom[1];
-        newCube.front_left[6] = bottom[2];
+        newCube.greenFace[8] = redFace[0];
+        newCube.greenFace[7] = redFace[1];
+        newCube.greenFace[6] = redFace[2];
 
         return newCube;
     }
@@ -247,34 +272,34 @@ public class Cube {
         Cube newCube = copy();
 
         // Change the face colors
-        newCube.back_left[0] = back_left[6];
-        newCube.back_left[1] = back_left[3];
-        newCube.back_left[2] = back_left[0];
-        newCube.back_left[3] = back_left[7];
-        newCube.back_left[5] = back_left[1];
-        newCube.back_left[6] = back_left[8];
-        newCube.back_left[7] = back_left[5];
-        newCube.back_left[8] = back_left[3];
+        newCube.whiteFace[0] = whiteFace[6];
+        newCube.whiteFace[1] = whiteFace[3];
+        newCube.whiteFace[2] = whiteFace[0];
+        newCube.whiteFace[3] = whiteFace[7];
+        newCube.whiteFace[5] = whiteFace[1];
+        newCube.whiteFace[6] = whiteFace[8];
+        newCube.whiteFace[7] = whiteFace[5];
+        newCube.whiteFace[8] = whiteFace[3];
 
         // Top
-        newCube.top[0] = back_right[0];
-        newCube.top[1] = back_right[1];
-        newCube.top[2] = back_right[2];
+        newCube.orangeFace[0] = blueFace[0];
+        newCube.orangeFace[1] = blueFace[1];
+        newCube.orangeFace[2] = blueFace[2];
 
         // Back Right
-        newCube.back_right[0] = bottom[8];
-        newCube.back_right[1] = bottom[7];
-        newCube.back_right[2] = bottom[6];
+        newCube.blueFace[0] = redFace[8];
+        newCube.blueFace[1] = redFace[7];
+        newCube.blueFace[2] = redFace[6];
 
         // Bottom
-        newCube.bottom[8] = front_left[0];
-        newCube.bottom[7] = front_left[1];
-        newCube.bottom[6] = front_left[2];
+        newCube.redFace[8] = greenFace[0];
+        newCube.redFace[7] = greenFace[1];
+        newCube.redFace[6] = greenFace[2];
 
         // Front Left
-        newCube.front_left[0] = top[0];
-        newCube.front_left[1] = top[1];
-        newCube.front_left[2] = top[2];
+        newCube.greenFace[0] = orangeFace[0];
+        newCube.greenFace[1] = orangeFace[1];
+        newCube.greenFace[2] = orangeFace[2];
 
         return newCube;
     }
@@ -284,34 +309,34 @@ public class Cube {
         Cube newCube = copy();
 
         // Change the face colors
-        newCube.bottom[0] = bottom[6];
-        newCube.bottom[1] = bottom[3];
-        newCube.bottom[2] = bottom[0];
-        newCube.bottom[3] = bottom[7];
-        newCube.bottom[5] = bottom[1];
-        newCube.bottom[6] = bottom[8];
-        newCube.bottom[7] = bottom[5];
-        newCube.bottom[8] = bottom[3];
+        newCube.redFace[0] = redFace[6];
+        newCube.redFace[1] = redFace[3];
+        newCube.redFace[2] = redFace[0];
+        newCube.redFace[3] = redFace[7];
+        newCube.redFace[5] = redFace[1];
+        newCube.redFace[6] = redFace[8];
+        newCube.redFace[7] = redFace[5];
+        newCube.redFace[8] = redFace[3];
 
         // Top
-        newCube.front_right[6] = front_left[0];
-        newCube.front_right[7] = front_left[3];
-        newCube.front_right[8] = front_left[6];
+        newCube.yellowFace[6] = greenFace[0];
+        newCube.yellowFace[7] = greenFace[3];
+        newCube.yellowFace[8] = greenFace[6];
 
         // Back Right
-        newCube.front_left[0] = back_left[3];
-        newCube.front_left[3] = back_left[2];
-        newCube.front_left[6] = back_left[1];
+        newCube.greenFace[0] = whiteFace[3];
+        newCube.greenFace[3] = whiteFace[2];
+        newCube.greenFace[6] = whiteFace[1];
 
         // Bottom
-        newCube.back_left[3] = back_right[8];
-        newCube.back_left[2] = back_right[5];
-        newCube.back_left[1] = back_right[3];
+        newCube.whiteFace[3] = blueFace[8];
+        newCube.whiteFace[2] = blueFace[5];
+        newCube.whiteFace[1] = blueFace[3];
 
         // Front Left
-        newCube.back_right[8] = front_right[6];
-        newCube.back_right[5] = front_right[7];
-        newCube.back_right[3] = front_right[8];
+        newCube.blueFace[8] = yellowFace[6];
+        newCube.blueFace[5] = yellowFace[7];
+        newCube.blueFace[3] = yellowFace[8];
 
         return newCube;
     }
@@ -385,12 +410,12 @@ public class Cube {
 
 
     public int compareTo(Cube other) {
-        int topDiff = compareFaces(top, other.top);
-        int bottomDiff = compareFaces(bottom, other.bottom);
-        int frontLeftDiff = compareFaces(front_left, other.front_left);
-        int frontRightDiff = compareFaces(front_right, other.front_right);
-        int backLeftDiff = compareFaces(back_left, other.back_left);
-        int backRightDiff = compareFaces(back_right, other.back_right);
+        int topDiff = compareFaces(orangeFace, other.orangeFace);
+        int bottomDiff = compareFaces(redFace, other.redFace);
+        int frontLeftDiff = compareFaces(greenFace, other.greenFace);
+        int frontRightDiff = compareFaces(yellowFace, other.yellowFace);
+        int backLeftDiff = compareFaces(whiteFace, other.whiteFace);
+        int backRightDiff = compareFaces(blueFace, other.blueFace);
 
         return    100000*(topDiff+1)
                 + 10000*(bottomDiff+1)
@@ -455,69 +480,69 @@ public class Cube {
         sb.append(lineBreak());
 
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
-        sb.append(colorText(back_left[0])).append(colorText(back_left[1])).append(colorText(back_left[2])).append(columnBreak());
+        sb.append(colorText(whiteFace[0])).append(colorText(whiteFace[1])).append(colorText(whiteFace[2])).append(columnBreak());
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
 
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
-        sb.append(colorText(back_left[3])).append(colorText(back_left[4])).append(colorText(back_left[5])).append(columnBreak());
+        sb.append(colorText(whiteFace[3])).append(colorText(whiteFace[4])).append(colorText(whiteFace[5])).append(columnBreak());
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
         
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
-        sb.append(colorText(back_left[6])).append(colorText(back_left[7])).append(colorText(back_left[8])).append(columnBreak());
+        sb.append(colorText(whiteFace[6])).append(colorText(whiteFace[7])).append(colorText(whiteFace[8])).append(columnBreak());
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
 
 
         sb.append(lineBreak());
 
-        sb.append(colorText(front_left[0])).append(colorText(front_left[1])).append(colorText(front_left[2])).append(columnBreak());
-        sb.append(colorText(top[0])).append(colorText(top[1])).append(colorText(top[2])).append(columnBreak());
-        sb.append(colorText(back_right[0])).append(colorText(back_right[1])).append(colorText(back_right[2])).append(columnBreak());
+        sb.append(colorText(greenFace[0])).append(colorText(greenFace[1])).append(colorText(greenFace[2])).append(columnBreak());
+        sb.append(colorText(orangeFace[0])).append(colorText(orangeFace[1])).append(colorText(orangeFace[2])).append(columnBreak());
+        sb.append(colorText(blueFace[0])).append(colorText(blueFace[1])).append(colorText(blueFace[2])).append(columnBreak());
         sb.append(lineBreak());
         
-        sb.append(colorText(front_left[3])).append(colorText(front_left[4])).append(colorText(front_left[5])).append(columnBreak());
-        sb.append(colorText(top[3])).append(colorText(top[4])).append(colorText(top[5])).append(columnBreak());
-        sb.append(colorText(back_right[3])).append(colorText(back_right[4])).append(colorText(back_right[5])).append(columnBreak());
+        sb.append(colorText(greenFace[3])).append(colorText(greenFace[4])).append(colorText(greenFace[5])).append(columnBreak());
+        sb.append(colorText(orangeFace[3])).append(colorText(orangeFace[4])).append(colorText(orangeFace[5])).append(columnBreak());
+        sb.append(colorText(blueFace[3])).append(colorText(blueFace[4])).append(colorText(blueFace[5])).append(columnBreak());
         sb.append(lineBreak());
         
-        sb.append(colorText(front_left[6])).append(colorText(front_left[7])).append(colorText(front_left[8])).append(columnBreak());
-        sb.append(colorText(top[6])).append(colorText(top[7])).append(colorText(top[8])).append(columnBreak());
-        sb.append(colorText(back_right[6])).append(colorText(back_right[7])).append(colorText(back_right[8])).append(columnBreak());
+        sb.append(colorText(greenFace[6])).append(colorText(greenFace[7])).append(colorText(greenFace[8])).append(columnBreak());
+        sb.append(colorText(orangeFace[6])).append(colorText(orangeFace[7])).append(colorText(orangeFace[8])).append(columnBreak());
+        sb.append(colorText(blueFace[6])).append(colorText(blueFace[7])).append(colorText(blueFace[8])).append(columnBreak());
         sb.append(lineBreak());
 
         sb.append(lineBreak());
 
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
-        sb.append(colorText(front_right[0])).append(colorText(front_right[1])).append(colorText(front_right[2])).append(columnBreak());
-        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
-        sb.append(lineBreak());
-        
-        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
-        sb.append(colorText(front_right[3])).append(colorText(front_right[4])).append(colorText(front_right[5])).append(columnBreak());
+        sb.append(colorText(yellowFace[0])).append(colorText(yellowFace[1])).append(colorText(yellowFace[2])).append(columnBreak());
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
         
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
-        sb.append(colorText(front_right[6])).append(colorText(front_right[7])).append(colorText(front_right[8])).append(columnBreak());
+        sb.append(colorText(yellowFace[3])).append(colorText(yellowFace[4])).append(colorText(yellowFace[5])).append(columnBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
+        sb.append(lineBreak());
+        
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
+        sb.append(colorText(yellowFace[6])).append(colorText(yellowFace[7])).append(colorText(yellowFace[8])).append(columnBreak());
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
 
         sb.append(lineBreak());
 
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
-        sb.append(colorText(bottom[0])).append(colorText(bottom[1])).append(colorText(bottom[2])).append(columnBreak());
+        sb.append(colorText(redFace[0])).append(colorText(redFace[1])).append(colorText(redFace[2])).append(columnBreak());
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
         
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
-        sb.append(colorText(bottom[3])).append(colorText(bottom[4])).append(colorText(bottom[5])).append(columnBreak());
+        sb.append(colorText(redFace[3])).append(colorText(redFace[4])).append(colorText(redFace[5])).append(columnBreak());
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
         
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
-        sb.append(colorText(bottom[6])).append(colorText(bottom[7])).append(colorText(bottom[8])).append(columnBreak());
+        sb.append(colorText(redFace[6])).append(colorText(redFace[7])).append(colorText(redFace[8])).append(columnBreak());
         sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
         
