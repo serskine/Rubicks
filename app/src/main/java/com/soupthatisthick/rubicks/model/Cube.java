@@ -1,6 +1,13 @@
 package com.soupthatisthick.rubicks.model;
 
+import com.soupthatisthick.rubicks.rules.Action;
+
 import java.util.logging.Logger;
+
+import static com.soupthatisthick.rubicks.model.Cube.Text.colorText;
+import static com.soupthatisthick.rubicks.model.Cube.Text.columnBreak;
+import static com.soupthatisthick.rubicks.model.Cube.Text.emptyText;
+import static com.soupthatisthick.rubicks.model.Cube.Text.lineBreak;
 
 /**
  * Created by Owner on 6/9/2018.
@@ -42,6 +49,39 @@ public class Cube {
     Color[] bottom = oneColor(Color.RED);
     Color[] back_left = oneColor(Color.WHITE);
     Color[] back_right = oneColor(Color.BLUE);
+
+    public Cube() {
+        top = oneColor(Color.ORANGE);
+        front_left = oneColor(Color.GREEN);
+        front_right = oneColor(Color.YELLOW);
+        bottom = oneColor(Color.RED);
+        back_left = oneColor(Color.WHITE);
+        back_right = oneColor(Color.BLUE);
+    }
+
+    public Cube(
+        Color[] top,
+        Color[] front_left,
+        Color[] front_right,
+        Color[] bottom,
+        Color[] back_left,
+        Color[] back_right
+    ) {
+        if (top.length != 9)            throw new RuntimeException("Top must have 9 tiles but has " + top.length +" instead.");
+        if (front_left.length != 9)     throw new RuntimeException("Front left must have 9 tiles but has " + front_left.length +" instead.");
+        if (front_right.length != 9)    throw new RuntimeException("Front Right must have 9 tiles but has " + front_right.length +" instead.");
+        if (bottom.length != 9)         throw new RuntimeException("Bottom must have 9 tiles but has " + bottom.length +" instead.");
+        if (back_left.length != 9)      throw new RuntimeException("Back left must have 9 tiles but has " + back_left.length +" instead.");
+        if (back_right.length != 9)     throw new RuntimeException("Back right must have 9 tiles but has " + back_right.length +" instead.");
+
+        this.top = top;
+        this.front_left = front_left;
+        this.front_right = front_right;
+        this.bottom = bottom;
+        this.back_left = back_left;
+        this.back_right = back_right;
+    }
+
 
     final Cube copy() {
         Cube newCube = new Cube();
@@ -132,14 +172,14 @@ public class Cube {
         Cube newCube = copy();
 
         // Change the face colors
-        newCube.back_right[0] = front_left[6];
-        newCube.back_right[1] = front_left[3];
-        newCube.back_right[2] = front_left[0];
-        newCube.back_right[3] = front_left[7];
-        newCube.back_right[5] = front_left[1];
-        newCube.back_right[6] = front_left[8];
-        newCube.back_right[7] = front_left[5];
-        newCube.back_right[8] = front_left[3];
+        newCube.back_right[0] = back_right[6];
+        newCube.back_right[1] = back_right[3];
+        newCube.back_right[2] = back_right[0];
+        newCube.back_right[3] = back_right[7];
+        newCube.back_right[5] = back_right[1];
+        newCube.back_right[6] = back_right[8];
+        newCube.back_right[7] = back_right[5];
+        newCube.back_right[8] = back_right[3];
 
         // Top
         newCube.top[2] = front_right[2];
@@ -332,6 +372,10 @@ public class Cube {
         }
     }
 
+    public Cube rotate(Action action, int numTimes) {
+        return rotate(action.getFace(), action.getRotation(), numTimes);
+    }
+
     private static int compareFaces(Color[] face1, Color[] face2) {
         for(int i=0; i<8; i++) {
             if (face1[i] != face2[i]) return i;
@@ -356,12 +400,10 @@ public class Cube {
                 + 1*(backRightDiff+1);
     }
 
-    @Override
-    public boolean equals(Object other) {
+    public boolean isEquiv(Object other) {
         if (other instanceof Cube) {
             int result = compareTo((Cube) other);
             if (result!=0) {
-                LOG.info("cube1.compareTo(cube2) == " + result);
                 return false;
             }
             return true;
@@ -370,112 +412,122 @@ public class Cube {
         }
     }
 
-    private static String lineBreak() {
-        return "\n";
+    public boolean equals(Object other) {
+        return (hashCode() == other.hashCode());
     }
 
-    private static String cBreak() {
-        return "  ";
-    }
-    
-    private static String et() {
-        return "     ";
-    }
+    static class Text {
+        static String lineBreak() {
+            return "\n";
+        }
 
-    private static String ct(Color color) {
-        switch(color) {
-            case ORANGE:
-                return "[ o ]";
-            case YELLOW:
-                return "[ y ]";
-            case BLUE:
-                return "[ b ]";
-            case WHITE:
-                return "[ w ]";
-            case GREEN:
-                return "[ g ]";
-            case RED:
-                return "[ r ]";
-            default:
-                throw new RuntimeException("Failed to assign text to color " + color + ".");
+        static String columnBreak() {
+            return "  ";
+        }
+
+        static String emptyText() {
+            return "     ";
+        }
+
+        static String colorText(Color color) {
+            switch (color) {
+                case ORANGE:
+                    return "[ o ]";
+                case YELLOW:
+                    return "[ y ]";
+                case BLUE:
+                    return "[ b ]";
+                case WHITE:
+                    return "[ w ]";
+                case GREEN:
+                    return "[ g ]";
+                case RED:
+                    return "[ r ]";
+                default:
+                    throw new RuntimeException("Failed to assign text to color " + color + ".");
+            }
         }
     }
 
-    public String describe() {
+    public String description() {
         StringBuilder sb = new StringBuilder();
 
         sb.append(lineBreak());
 
-        sb.append(et()).append(et()).append(et()).append(cBreak());
-        sb.append(ct(back_left[0])).append(ct(back_left[1])).append(ct(back_left[2])).append(cBreak());
-        sb.append(et()).append(et()).append(et()).append(cBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
+        sb.append(colorText(back_left[0])).append(colorText(back_left[1])).append(colorText(back_left[2])).append(columnBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
 
-        sb.append(et()).append(et()).append(et()).append(cBreak());
-        sb.append(ct(back_left[3])).append(ct(back_left[4])).append(ct(back_left[5])).append(cBreak());
-        sb.append(et()).append(et()).append(et()).append(cBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
+        sb.append(colorText(back_left[3])).append(colorText(back_left[4])).append(colorText(back_left[5])).append(columnBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
         
-        sb.append(et()).append(et()).append(et()).append(cBreak());
-        sb.append(ct(back_left[6])).append(ct(back_left[7])).append(ct(back_left[8])).append(cBreak());
-        sb.append(et()).append(et()).append(et()).append(cBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
+        sb.append(colorText(back_left[6])).append(colorText(back_left[7])).append(colorText(back_left[8])).append(columnBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
 
 
         sb.append(lineBreak());
 
-        sb.append(ct(front_left[0])).append(ct(front_left[1])).append(ct(front_left[2])).append(cBreak());
-        sb.append(ct(top[0])).append(ct(top[1])).append(ct(top[2])).append(cBreak());
-        sb.append(ct(back_right[0])).append(ct(back_right[1])).append(ct(back_right[2])).append(cBreak());
+        sb.append(colorText(front_left[0])).append(colorText(front_left[1])).append(colorText(front_left[2])).append(columnBreak());
+        sb.append(colorText(top[0])).append(colorText(top[1])).append(colorText(top[2])).append(columnBreak());
+        sb.append(colorText(back_right[0])).append(colorText(back_right[1])).append(colorText(back_right[2])).append(columnBreak());
         sb.append(lineBreak());
         
-        sb.append(ct(front_left[3])).append(ct(front_left[4])).append(ct(front_left[5])).append(cBreak());
-        sb.append(ct(top[3])).append(ct(top[4])).append(ct(top[5])).append(cBreak());
-        sb.append(ct(back_right[3])).append(ct(back_right[4])).append(ct(back_right[5])).append(cBreak());
+        sb.append(colorText(front_left[3])).append(colorText(front_left[4])).append(colorText(front_left[5])).append(columnBreak());
+        sb.append(colorText(top[3])).append(colorText(top[4])).append(colorText(top[5])).append(columnBreak());
+        sb.append(colorText(back_right[3])).append(colorText(back_right[4])).append(colorText(back_right[5])).append(columnBreak());
         sb.append(lineBreak());
         
-        sb.append(ct(front_left[6])).append(ct(front_left[7])).append(ct(front_left[8])).append(cBreak());
-        sb.append(ct(top[6])).append(ct(top[7])).append(ct(top[8])).append(cBreak());
-        sb.append(ct(back_right[6])).append(ct(back_right[7])).append(ct(back_right[8])).append(cBreak());
+        sb.append(colorText(front_left[6])).append(colorText(front_left[7])).append(colorText(front_left[8])).append(columnBreak());
+        sb.append(colorText(top[6])).append(colorText(top[7])).append(colorText(top[8])).append(columnBreak());
+        sb.append(colorText(back_right[6])).append(colorText(back_right[7])).append(colorText(back_right[8])).append(columnBreak());
         sb.append(lineBreak());
 
         sb.append(lineBreak());
 
-        sb.append(et()).append(et()).append(et()).append(cBreak());
-        sb.append(ct(front_right[0])).append(ct(front_right[1])).append(ct(front_right[2])).append(cBreak());
-        sb.append(et()).append(et()).append(et()).append(cBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
+        sb.append(colorText(front_right[0])).append(colorText(front_right[1])).append(colorText(front_right[2])).append(columnBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
         
-        sb.append(et()).append(et()).append(et()).append(cBreak());
-        sb.append(ct(front_right[3])).append(ct(front_right[4])).append(ct(front_right[5])).append(cBreak());
-        sb.append(et()).append(et()).append(et()).append(cBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
+        sb.append(colorText(front_right[3])).append(colorText(front_right[4])).append(colorText(front_right[5])).append(columnBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
         
-        sb.append(et()).append(et()).append(et()).append(cBreak());
-        sb.append(ct(front_right[6])).append(ct(front_right[7])).append(ct(front_right[8])).append(cBreak());
-        sb.append(et()).append(et()).append(et()).append(cBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
+        sb.append(colorText(front_right[6])).append(colorText(front_right[7])).append(colorText(front_right[8])).append(columnBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
 
         sb.append(lineBreak());
 
-        sb.append(et()).append(et()).append(et()).append(cBreak());
-        sb.append(ct(bottom[0])).append(ct(bottom[1])).append(ct(bottom[2])).append(cBreak());
-        sb.append(et()).append(et()).append(et()).append(cBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
+        sb.append(colorText(bottom[0])).append(colorText(bottom[1])).append(colorText(bottom[2])).append(columnBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
         
-        sb.append(et()).append(et()).append(et()).append(cBreak());
-        sb.append(ct(bottom[3])).append(ct(bottom[4])).append(ct(bottom[5])).append(cBreak());
-        sb.append(et()).append(et()).append(et()).append(cBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
+        sb.append(colorText(bottom[3])).append(colorText(bottom[4])).append(colorText(bottom[5])).append(columnBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
         
-        sb.append(et()).append(et()).append(et()).append(cBreak());
-        sb.append(ct(bottom[6])).append(ct(bottom[7])).append(ct(bottom[8])).append(cBreak());
-        sb.append(et()).append(et()).append(et()).append(cBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
+        sb.append(colorText(bottom[6])).append(colorText(bottom[7])).append(colorText(bottom[8])).append(columnBreak());
+        sb.append(emptyText()).append(emptyText()).append(emptyText()).append(columnBreak());
         sb.append(lineBreak());
         
         return sb.toString();
     }
 
+    @Override
+    public int hashCode() {
+        return description().hashCode();
+    }
 }
 
 
